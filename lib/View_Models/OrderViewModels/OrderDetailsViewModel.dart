@@ -17,10 +17,14 @@ class OrderDetailsViewModel extends GetxController{
     fetchAllOrderDetails();
   }
 
+
+
+
   fetchAllOrderDetails() async{
     var orderdetails = await orderdetailsRepository.getOrderDetails();
     allOrderDetails.value = orderdetails;
   }
+
 
   addOrderDetail(OrderDetailsModel orderdetailsModel){
     orderdetailsRepository.add(orderdetailsModel);

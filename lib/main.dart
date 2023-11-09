@@ -1,27 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:order_booking_shop/API/ApiServices.dart';
+import 'package:order_booking_shop/API/DatabaseOutputs.dart';
+//import 'package:order_booking_shop/Databases/DBProductCategory.dart';
+import 'package:order_booking_shop/Databases/DBlogin.dart';
 import 'package:order_booking_shop/Views/ShopListPage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'API/Globals.dart';
 import 'Databases/OrderDatabase/DBHelperOwner.dart';
 import 'Databases/OrderDatabase/DBHelperProducts.dart';
+import 'Databases/OrderDatabase/DBProductCategory.dart';
+
 import 'Models/ShopProvider.dart';
+import 'Models/loginModel.dart';
 
 void main() {
+
   runApp(
     MaterialApp( // Wrap with MaterialApp
-      home: ChangeNotifierProvider(
-        create: (context) => ShopProvider(),
-        child: Scaffold(
-          backgroundColor: Colors.greenAccent,
-          body: Center(
-            child: LoginForm(),
-          ),
+      home: //ChangeNotifierProvider(
+      //create: (context) => ShopProvider(),
+      Scaffold(
+        backgroundColor: Colors.greenAccent,
+        body: Center(
+          child: LoginForm(),
         ),
       ),
     ),
+
   );
 }
-
 class LoginForm extends StatefulWidget {
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -35,31 +44,28 @@ class _LoginFormState extends State<LoginForm> {
 
   void initState(){
     super.initState();
-    initializeData();
-  }
-
-  void initializeData() async{
-    final api = ApiServices();
-    final db = DBHelperProducts();
-    final dbowner = DBHelperOwner();
-    var responce = await api.getApi("https://g04d40198f41624-i0czh1rzrnvg0r4l.adb.me-dubai-1.oraclecloudapps.com/ords/courage/product/record");
-    var results= await db.insertProductsAll(responce);  //return True or False
-    print(results.toString());
-    var responce2 = await api.getApi("https://g04d40198f41624-i0czh1rzrnvg0r4l.adb.me-dubai-1.oraclecloudapps.com/ords/courage/Shop/record/");
-    var results2 = await dbowner.insertOwnerAll(responce2);   //return True or False
-    print(results2.toString());
-    var responce3 = await api.getApi("https://g04d40198f41624-i0czh1rzrnvg0r4l.adb.me-dubai-1.oraclecloudapps.com/ords/courage/AddAhop/record/");
-    var results3 = await dbowner.insertShopAll(responce3);    //return True or False
-    print(results3.toString());
+    DatabaseOutputs outputs = DatabaseOutputs();
+    outputs.checkFirstRun();
   }
 
   void _forgotPassword() {
     // Navigate to the second page
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ShopListPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ShopListPage(onShopItemSelected: (String ) {  },)));
   }
 
-  void _login() {
+  final dblogin=DBHelperLogin();
+  _login() async{
     // Add the login logic here
+    var responce = await dblogin.login(Users(user_id:_emailController.text, password: _passwordController.text));
+    if(responce == true){
+      //Navigate
+      userNames = _emailController.text;
+      Fluttertoast.showToast(msg: "Successfull login",toastLength: Toast.LENGTH_LONG);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ShopListPage(onShopItemSelected: (String ) {  },)));
+    }else{
+      //Failded login
+      Fluttertoast.showToast(msg: "Failed login",toastLength: Toast.LENGTH_LONG);
+    }
   }
 
   @override
@@ -181,7 +187,9 @@ class _LoginFormState extends State<LoginForm> {
             height: 40,
             width: 400,
             child: ElevatedButton(
-              onPressed: _login,
+              onPressed: (){
+                _login();
+              },
               style: ElevatedButton.styleFrom(
                 primary: Colors.green, // Background color of the button
                 onPrimary: Colors.black, // Text color

@@ -26,39 +26,25 @@ class DBHelperOwner{
     return db;
   }
   _onCreate(Database db, int version){
-    db.execute("CREATE TABLE owner(owner_name TEXT, owner_contact TEXT)");
-    db.execute("CREATE TABLE shopNames(shop_name TEXT)");
+    db.execute("CREATE TABLE ownerData(id NUMBER,shop_name TEXT, owner_name TEXT, owner_contact TEXT)");
   }
 
-  Future<bool> insertOwnerAll(List<dynamic> dataList) async {
+  Future<bool> insertOwnerData(List<dynamic> dataList) async {
     final Database db = await initDatabase();
     try {
       for (var data in dataList) {
-        await db.insert('owner', data);
+        await db.insert('ownerData', data);
       }
       return true;
     } catch (e) {
-      print("Error inserting product data: ${e.toString()}");
+      print("Error inserting owner  data: ${e.toString()}");
       return false;
     }
   }
-  Future<bool> insertShopAll(List<dynamic> dataList) async {
-    final Database db = await initDatabase();
-    try {
-      for (var data in dataList) {
-        await db.insert('shopNames', data);
-      }
-      return true;
-    } catch (e) {
-      print("Error inserting product data: ${e.toString()}");
-      return false;
-    }
-  }
-
   Future<List<String>> getShopNames() async {
     final Database db = await initDatabase();
     try {
-      final List<Map<String, dynamic>> shopNames = await db.query('shopNames');
+      final List<Map<String, dynamic>> shopNames = await db.query('ownerData');
       return shopNames.map((map) => map['shop_name'] as String).toList();
     } catch (e) {
       print("Error retrieving shop names: $e");
@@ -66,17 +52,20 @@ class DBHelperOwner{
     }
   }
 
-
-
-  Future<List<Map<String, dynamic>>?> getAllShops() async {
+  Future<List<Map<String, dynamic>>?> getOwnersDB() async {
     final Database db = await initDatabase();
     try {
-      final List<Map<String, dynamic>> shops = await db.query('shopNames');
-      return shops;
+      final List<Map<String, dynamic>> owner = await db.query('ownerData');
+      return owner;
     } catch (e) {
-      print("Error retrieving shopNames: $e");
+      print("Error retrieving products: $e");
       return null;
     }
+  }
+
+  Future<void> deleteAllRecords() async{
+    final db = await initDatabase();
+    await db.delete('ownerData');
   }
 
 }

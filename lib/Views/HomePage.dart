@@ -5,15 +5,40 @@ import 'package:order_booking_shop/Views/ReturnFormPage.dart';
 import 'package:order_booking_shop/Views/ShopPage.dart';
 import 'package:order_booking_shop/Views/ShopVisit.dart';
 import 'package:order_booking_shop/Views/ShopVisit_2ndPage.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 
 class HomePage extends StatelessWidget {
+
+
+
+  //final String selectedItem;
+  //HomePage({required this.selectedItem});
+
+
+
   void navigateToShopPage(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) => ShopPage()));
   }
 
   @override
   Widget build(BuildContext context) {
+
+
+    final Map<String, String>? shopData =
+    ModalRoute.of(context)!.settings.arguments as Map<String, String>?;
+
+    String selectedShopName = shopData?['shopName'] ?? ''; // Access the shop name
+    String selectedShopOwner = shopData?['ownerName'] ?? ''; // Access the owner name
+
+    print('Selected Shop Name: $selectedShopName');
+    print('Selected Shop Owner: $selectedShopOwner');
+
+    //final selectedItem = ModalRoute.of(context as BuildContext)?.settings.arguments as String; //AS
+    //String selectedShopName = selectedItem; //AS
+    //print(selectedShopName);  //AS
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[200],
@@ -91,8 +116,8 @@ class HomePage extends StatelessWidget {
                       width: 150,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ShopVisit()));
-                        },
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ShopVisit(onBrandItemsSelected: (String ) {  },),
+                              settings: RouteSettings(arguments: shopData)),);},
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -229,7 +254,7 @@ class HomePage extends StatelessWidget {
 
 void main() {
   runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: HomePage(),
-  ));
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
+      ));
 }

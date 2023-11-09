@@ -48,7 +48,11 @@ dependencies:
   http_parser: ^4.0.2
   path: ^1.8.3
   intl: ^0.17.0
-
+  dropdown_search: ^5.0.6
+  dropdown_button2: ^2.3.9
+  flutter_typeahead: ^4.8.0
+  timezone_utc_offset:
+  nanoid: ^1.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

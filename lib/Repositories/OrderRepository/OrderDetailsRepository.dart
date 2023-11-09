@@ -8,39 +8,34 @@ import '../../Models/OrderModels/OrderDetailsModel.dart';
 
 class OrderDetailsRepository {
 
-  DBHelperOrderDetails dbHelperOrderDetails = DBHelperOrderDetails();
+  OrderDetailsDatabase dbHelperOrderDetails = OrderDetailsDatabase();
 
   Future<List<OrderDetailsModel>> getOrderDetails() async {
     var dbClient = await dbHelperOrderDetails.db;
-    List<Map> maps = await dbClient.query(tableName2, columns: [
-      'id',
-      'productCode',
-      'productName',
-      'uom',
-      'price',
-      'quantity'
-    ]);
+    List<Map> maps = await dbClient.query('order_details', columns: ['id','order_master_id', 'productName', 'quantity', 'price', 'amount' ]);
     List<OrderDetailsModel> orderdetails = [];
     for (int i = 0; i < maps.length; i++) {
+
       orderdetails.add(OrderDetailsModel.fromMap(maps[i]));
     }
     return orderdetails;
   }
 
+
   Future<int> add(OrderDetailsModel orderdetailsModel) async {
     var dbClient = await dbHelperOrderDetails.db;
-    return await dbClient.insert(tableName3, orderdetailsModel.toMap());
+    return await dbClient.insert('orderDetails', orderdetailsModel.toMap());
   }
 
   Future<int> update(OrderDetailsModel orderdetailsModel) async {
     var dbClient = await dbHelperOrderDetails.db;
-    return await dbClient.update(tableName3, orderdetailsModel.toMap(),
+    return await dbClient.update('orderDetails', orderdetailsModel.toMap(),
         where: 'id = ?', whereArgs: [orderdetailsModel.id]);
   }
 
   Future<int> delete(int id) async {
     var dbClient = await dbHelperOrderDetails.db;
-    return await dbClient.delete(tableName3,
+    return await dbClient.delete('orderDetails',
         where: 'id = ?', whereArgs: [id]);
   }
 

@@ -3,22 +3,26 @@ import 'package:order_booking_shop/Models/ProductsModel.dart';
 
 class OrderMasterModel {
   int? orderId;
+  String? date;
   String? shopName;
   String? ownerName;
   String? phoneNo;
   String? brand;
 
   OrderMasterModel({
+
     this.orderId,
+    this.date,
     this.shopName,
     this.ownerName,
     this.phoneNo,
-    this.brand, ProductsModel? product,
+    this.brand,
   });
 
   factory OrderMasterModel.fromMap(Map<dynamic, dynamic> json) {
     return OrderMasterModel(
       orderId: json['orderId'],
+      date: json['date'],
       shopName: json['shopName'],
       ownerName: json['ownerName'],
       phoneNo: json['phoneNo'],
@@ -28,7 +32,9 @@ class OrderMasterModel {
 
   Map<String, dynamic> toMap() {
     return {
+
       'orderId': orderId,
+      'date': date,
       'shopName': shopName,
       'ownerName': ownerName,
       'phoneNo': phoneNo,

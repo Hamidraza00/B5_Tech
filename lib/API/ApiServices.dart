@@ -29,9 +29,7 @@ class ApiServices extends BaseApiServices {
       throw RequestTimeOut('');
 
     }
-    print(responseJson);
     return responseJson ;
-
   }
 
 
@@ -51,15 +49,40 @@ class ApiServices extends BaseApiServices {
       ).timeout( const Duration(seconds: 10));
       responseJson  = returnResponse(response) ;
     }on SocketException {
-      throw InternetException('');
+      print(InternetException(''));
     }on RequestTimeOut {
-      throw RequestTimeOut('');
+      print(RequestTimeOut(''));
 
     }
     if (kDebugMode) {
       print(responseJson);
     }
     return responseJson ;
+  }
+
+  Future<bool> masterPost(var data , String url) async{
+    if (kDebugMode) {
+      print(url);
+      print(data);
+    }
+
+    dynamic responseJson;
+    try {
+
+      final response = await http.post(Uri.parse(url),
+          body: data
+      ).timeout( const Duration(seconds: 10));
+
+      if(response.statusCode == 200){
+        return true;
+      }else{
+        print("ERROR ${response.statusCode.toString()}");
+        return false;
+      }
+    }catch (Exception){
+      print(Exception.toString());
+      return false;
+    }
   }
 
   dynamic returnResponse(http.Response response){

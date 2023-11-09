@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:order_booking_shop/Views/NewOrderBookingPage.dart';
 import 'package:order_booking_shop/Views/OrderBookingPage.dart';
+
+import 'FinalOrderBookingPage.dart';
 
 
 void main() {
@@ -10,6 +11,8 @@ void main() {
 }
 
 class ShopVisit_2ndPage extends StatefulWidget {
+// Add the selectedBrand parameter
+
   @override
   _ShopVisit_2ndPageState createState() => _ShopVisit_2ndPageState();
 }
@@ -25,6 +28,16 @@ class _ShopVisit_2ndPageState extends State<ShopVisit_2ndPage> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    final data = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final shopName = data['shopName'];
+    final ownerName = data['ownerName'];
+    final selectedBrandName = data['selectedBrandName'];
+    print(shopName);
+    print(ownerName);
+    print(selectedBrandName);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Title'),
@@ -75,11 +88,14 @@ class _ShopVisit_2ndPageState extends State<ShopVisit_2ndPage> {
                 SizedBox(height: 50),
                 ElevatedButton(
                   onPressed: () {
+                    // Navigate to FinalOrderBookingPage and pass the selected brand
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => NewOrderBookingPage()
+                      MaterialPageRoute(
+                        builder: (context) => FinalOrderBookingPage(),
+                        settings: RouteSettings(arguments: data),
                       ),
-                    );// Navigate to the NinthPage
+                    );
                   },
                   child: Text('+ Order Booking Form'),
                 ),
@@ -142,4 +158,3 @@ class _ShopVisit_2ndPageState extends State<ShopVisit_2ndPage> {
     );
   }
 }
-// TODO Implement this library.

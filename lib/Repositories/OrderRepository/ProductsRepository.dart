@@ -18,16 +18,16 @@ class ProductsRepository{
     return products;
   }
 
-  Future<int> add(ProductsModel productsModer) async{
+  Future<int> add(ProductsModel productsModel) async{
     var dbClient = await dbHelperProducts.db;
-    return await dbClient.insert('products', productsModer.toMap());
+    return await dbClient.insert('products', productsModel.toMap());
   }
 
 
   Future<int> update(ProductsModel productsModel) async{
     var dbClient = await dbHelperProducts.db;
-    return await dbClient.update('products', productsModel.toMap(),
-        where: 'product_code = ?', whereArgs: [productsModel.product_code]);
+    return await dbClient.update('products', productsModel.toMap());
+     //   where: 'product_code = ?', whereArgs: [productsModel.product_code]);
   }
 
   Future<int> delete(int product_code) async{

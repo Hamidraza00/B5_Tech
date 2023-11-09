@@ -19,17 +19,6 @@ class ShopRepository {
     return shop;
   }
 
-  Future<List<Map<String, dynamic>>?> getShopNames() async {
-    var dbClient = await dbHelper.db;
-    try {
-      List<Map<String, dynamic>> maps = await dbClient!.query('shops', columns: ['shop_name']);
-      return maps;
-    } catch (e) {
-      print("Error retrieving shop names: $e");
-      return null;
-    }
-  }
-
   Future<List<ShopModel>> getShopName() async {
     var dbClient = await dbHelper.db;
     List<Map> maps = await dbClient!.query(tableName, columns: ['id', 'shop_name']);

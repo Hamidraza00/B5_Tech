@@ -1,26 +1,27 @@
 class OrderDetailsModel {
   int? id;
-  String? productCode;
+  int? orderMasterId;
   String? productName;
-  String? uom;
-  String? price;
+  int? amount;
+  int? price;
   int? quantity;
 
   OrderDetailsModel({
     this.id,
-    this.productCode,
+    this.orderMasterId,
     this.productName,
-    this.uom,
+    this.amount,
     this.price,
     this.quantity,
+
   });
 
   factory OrderDetailsModel.fromMap(Map<dynamic, dynamic> json) {
     return OrderDetailsModel(
       id: json['id'],
-      productCode: json['product_code'],
+      orderMasterId: json['order_master_id'],
       productName: json['productName'],
-      uom: json['uom'],
+      amount: json['amount'],
       price: json['price'],
       quantity: json['quantity'],
     );
@@ -29,9 +30,9 @@ class OrderDetailsModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'productCode': productCode,
+      'order_master_id':orderMasterId,
       'productName': productName,
-      'uom': uom,
+      'amount': amount,
       'price': price,
       'quantity': quantity,
     };

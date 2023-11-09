@@ -102,14 +102,16 @@ class SavedOrderMasterDetailPage extends StatelessWidget {
             Text('Shop Name: ${ordermaster.shopName ?? "N/A"}'),
             //Text('Shop Address: ${shop.shopAddress ?? "N/A"}'),
             Text('Owner Name: ${ordermaster.ownerName ?? "N/A"}'),
-           // Text('Owner CNIC: ${shop.ownerCNIC ?? "N/A"}'),
+            Text('Date: ${ordermaster.date ?? "N/A"}'),
+
+
             Text('Phone Number: ${ordermaster.phoneNo ?? "N/A"}'),
             Text('Brand ${ordermaster.brand ?? "N/A"}'),
-
-            // Add more details as needed.
+            //details as needed.
           ],
         ),
       ),
     );
+
   }
 }

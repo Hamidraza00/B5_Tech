@@ -3,27 +3,52 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DBHelperOrderDetails{
+import '../../Models/OrderModels/OrderDetailsModel.dart';
 
-  static Database? _db;
+class OrderDetailsDatabase {
+  static Database? _database;
 
   Future<Database> get db async{
-    if(_db != null)
+    if(_database != null)
     {
-      return _db!;
+      return _database!;
     }
-    _db = await initDatabase();
-    return _db!;
+    _database = await initDatabase();
+    return _database!;
+  }
+  Future<Database?> initDatabase() async {
+    final databasesPath = await getDatabasesPath();
+    final path = join(databasesPath, 'order_database.db');
+
+    _database = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await createOrderDetailsTable(db, version);
+      },
+    );
+
+    return _database; // Return the initialized database
   }
 
-  initDatabase() async{
-    io.Directory documentDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentDirectory.path,'orderdetails.db');
-    var db = openDatabase(path,version: 1,onCreate: _onCreate);
-    return db;
+  Future<void> createOrderDetailsTable(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE order_details(
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        order_master_id INTEGER ,
+        productName TEXT,
+        quantity INTEGER,
+        price INTEGER,
+        amount INTEGER,
+        FOREIGN KEY (order_master_id) REFERENCES orderMaster(orderId)
+      )
+    ''');
   }
-  _onCreate(Database db, int version){
-     db.execute("CREATE TABLE orderDetails (id INTEGER PRIMARY KEY,product_code TEXT,quantity INTEGER,product_name TEXT,uom TEXT,price TEXT,FOREIGN KEY (id) REFERENCES OrderMaster(id))");
-}
-}
 
+  Future<void> addOrderDetails(List<OrderDetailsModel> orderDetailsList) async {
+    final db = await _database;
+    for (var orderDetails in orderDetailsList) {
+      await db?.insert('order_details', orderDetails.toMap());
+    }
+  }
+}
