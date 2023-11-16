@@ -45,6 +45,8 @@ class OrderDetailsDatabase {
     ''');
   }
 
+
+
   Future<void> addOrderDetails(List<OrderDetailsModel> orderDetailsList) async {
     final db = await _database;
     for (var orderDetails in orderDetailsList) {

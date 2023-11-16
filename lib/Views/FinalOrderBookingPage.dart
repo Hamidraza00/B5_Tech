@@ -36,7 +36,7 @@ class _FinalOrderBookingPageState extends State<FinalOrderBookingPage> {
   TextEditingController _ownerNameController = TextEditingController();
   TextEditingController _phoneNoController = TextEditingController();
   TextEditingController _brandNameController = TextEditingController();
- // TextEditingController _dateController = TextEditingController();
+  // TextEditingController _dateController = TextEditingController();
   //final ProductsViewModel productsViewModel = Get.put(ProductsViewModel());
   final productsViewModel = Get.put(ProductsViewModel());
   String selectedBrand = '';
@@ -62,6 +62,9 @@ class _FinalOrderBookingPageState extends State<FinalOrderBookingPage> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     // final String selectedBrand; // Define a parameter to receive the selected brand
     // FinalOrderBookingPage({required this.selectedBrand}); // Constructor to receive the selected brand
 
@@ -69,128 +72,134 @@ class _FinalOrderBookingPageState extends State<FinalOrderBookingPage> {
     final shopName = data['shopName'];
     final ownerName = data['ownerName'];
     final selectedBrandName = data['selectedBrandName'];
+    String bookerName = data['bookerName'];
+
+    print(bookerName);
 
     _ShopNameController.text = shopName!;
     _ownerNameController.text = ownerName!;
     _brandNameController.text = selectedBrandName as String;
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Order Booking'),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-        ),
-        body: Stack(
-          children: <Widget>[
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  buildTextFormField('Shop Name', _ShopNameController),
-                  SizedBox(height: 10),
-                  buildTextFormField('Owner Name', _ownerNameController),
-                  SizedBox(height: 10),
-                  buildTextFormField('Phone#', _phoneNoController),
-                  SizedBox(height: 10),
-                  buildTextFormField('Brand', _brandNameController),
-                  SizedBox(height: 10),
-                  for (var i = 0; i < rowDataList.length; i++)
-                    buildRow(rowDataList[i], i + 1),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.center,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        addNewRow();
-                      },
-                      child: Text('Add Products'),
-                    ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Order Booking'),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+      ),
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                buildTextFormField('Shop Name', _ShopNameController),
+                SizedBox(height: 10),
+                buildTextFormField('Owner Name', _ownerNameController),
+                SizedBox(height: 10),
+                buildTextFormField('Phone#', _phoneNoController),
+                SizedBox(height: 10),
+                buildTextFormField('Brand', _brandNameController),
+                SizedBox(height: 10),
+                for (var i = 0; i < rowDataList.length; i++)
+                  buildRow(rowDataList[i], i + 1),
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      addNewRow();
+                    },
+                    child: Text('Add Products'),
                   ),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.center,
-                    child: ElevatedButton(
-                      onPressed: ()  async {
-                              if (_ShopNameController.text.isNotEmpty) {
-                    ordermasterViewModel.addOrderMaster(OrderMasterModel(
-                      orderId: ordermasterId,
-                      shopName: _ShopNameController.text,
-                      ownerName: _ownerNameController.text,
-                      phoneNo: _phoneNoController.text,
-                      brand: _brandNameController.text,
-                      date:  _getCurrentDate(),
-
-
-                    ));
-
-                    OrderMasterModel recentOrderMaster = ordermasterViewModel.allOrderMaster.last;
-                    ordermasterId = recentOrderMaster.orderId;
-                          // Save order details associated with the order master
-                               // saveOrderDetails();
-
-                    List<OrderDetailsModel> orderDetailsList = [];
-
-                    for (var rowData in rowDataList) {
-                      final orderDetails = OrderDetailsModel(
-                        id: orderdetailsId , // Assuming ordermasterId is set
-                        orderMasterId: ordermasterId,
-                        productName: rowData.itemsDropdownValue,
-                        quantity: int.tryParse(rowData.qtyController.text) ?? 0,
-                        price: int.tryParse(rowData.rateController.text) ?? 0,
-                        amount: int.tryParse(rowData.amountController.text) ?? 0,
-                      );
-                      orderDetailsList.add(orderDetails);
-                    }
-
-                    // Save order details
-                    await OrderDetailsDatabase().addOrderDetails(orderDetailsList);
-
-                    _ShopNameController.text = "";
-                    _ownerNameController.text = "";
-                    _phoneNoController.text = "";
-                    _brandNameController.text = "";
-
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (context) =>
-                    //         OrderMasterList(savedOrderMasterData: ordermasterViewModel.allOrderMaster),
-                    //   ),
-                    // );
-
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            OrderMasterList(savedOrderMasterData: ordermasterViewModel.allOrderMaster),
-                      ),
-                    );
-
-
-
-                              }
-                      },
-                      child: Text('Confirm'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              top: 0,
-              right: 0,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  _getCurrentDate(),
-                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton(
+                    onPressed: ()  async {
+                      if (_ShopNameController.text.isNotEmpty)  {
+                        ordermasterViewModel.addOrderMaster(OrderMasterModel(
+                          orderId: ordermasterId,
+                          shopName: _ShopNameController.text,
+                          ownerName: _ownerNameController.text,
+                          phoneNo: _phoneNoController.text,
+                          brand: _brandNameController.text,
+                          date:  _getCurrentDate(),
+                        ));
+
+                        OrderMasterModel recentOrderMaster = ordermasterViewModel.allOrderMaster.last;
+                        ordermasterId = recentOrderMaster.orderId;
+
+                        List<Map<String, dynamic>> rowDataDetails = [];
+                        for (var rowData in rowDataList) {
+                          String selectedItem = rowData.itemsDropdownValue;
+                          int quantity = int.tryParse(rowData.qtyController.text) ?? 0;
+                          int totalAmount = int.tryParse(rowData.amountController.text) ?? 0;
+
+                          rowDataDetails.add({
+                            'selectedItem': selectedItem,
+                            'quantity': quantity,
+                            'totalAmount': totalAmount,
+                          });
+                        }
+
+                        // Save order details associated with the order master
+                           saveOrderDetails();
+
+                        // Define the data to pass to the next page
+                        Map<String, dynamic> dataToPass = {
+                          'orderId': ordermasterId,
+                          'orderDate': _getCurrentDate(),
+                          'bookerName': bookerName,
+                          //  'visitConductedBy': visitConductedBy,
+                          'rowDataDetails': rowDataDetails,
+                        };
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            //builder: (context) => OrderMasterList(savedOrderMasterData: ordermasterViewModel.allOrderMaster),
+                            builder: (context) => OrderBooking_2ndPage(), // Replace 'NextPage' with the actual page you're navigating to
+                            settings: RouteSettings(arguments: dataToPass),
+                          ),
+                        );
+                      }
+                    },
+                    child: Text('Confirm'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                _getCurrentDate(),
+                style: TextStyle(fontSize: 16, color: Colors.black),
               ),
             ),
-          ],
-        ),
-      );
-    }
+          ),
+        ],
+      ),
+    );
+  }
   void saveOrderDetails() async {
+    List<OrderDetailsModel> orderDetailsList = [];
 
+    for (var rowData in rowDataList) {
+      final orderDetails = OrderDetailsModel(
+        orderMasterId: ordermasterId ?? 0, // Assuming ordermasterId is set
+        productName: rowData.itemsDropdownValue,
+        quantity: int.tryParse(rowData.qtyController.text) ?? 0,
+        price: int.tryParse(rowData.rateController.text) ?? 0,
+        amount: int.tryParse(rowData.amountController.text) ?? 0,
+      );
+      orderDetailsList.add(orderDetails);
+    }
+
+    // Save order details
+    await DBHelperOrderMaster().addOrderDetails(orderDetailsList);
   }
 
   Widget buildTextFormField(
@@ -311,7 +320,7 @@ class _FinalOrderBookingPageState extends State<FinalOrderBookingPage> {
                 final selectedProduct = products.firstWhere(
                       (product) => product.product_name == newValue,
                   orElse: () => ProductsModel(
-                     product_code: '',
+                      product_code: '',
                       product_name: '',
                       uom: '',
                       price: ''
@@ -374,10 +383,10 @@ class _FinalOrderBookingPageState extends State<FinalOrderBookingPage> {
   }
 
 
-      void addNewRow() {
-        setState(() {
-          final newRow = RowData(
-            serialNumber: serialNumber,
+  void addNewRow() {
+    setState(() {
+      final newRow = RowData(
+        serialNumber: serialNumber,
         qtyController: TextEditingController(),
         rateController: TextEditingController(),
         amountController: TextEditingController(),

@@ -1,1 +1,1 @@
-String tableName = "shop";
+String shopVisit = "shop";

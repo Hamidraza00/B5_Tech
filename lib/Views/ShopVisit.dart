@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-
 import '../Databases/OrderDatabase/DBHelperProducts.dart';
 import '../Databases/OrderDatabase/DBProductCategory.dart';
 import '../Models/ProductsModel.dart';
+
+import '../Models/ShopVisitModels.dart';
 import '../View_Models/OrderViewModels/ProductsViewModel.dart';
+import '../View_Models/ShopVisitViewModel.dart';
 import 'FinalOrderBookingPage.dart';
 import 'ShopVisit_2ndPage.dart';
 void main() {
@@ -21,7 +23,6 @@ void main() {
 }
 
 
-
 class ShopVisit extends StatefulWidget {
   @override
   _ShopVisitState createState() => _ShopVisitState();
@@ -34,8 +35,12 @@ class ShopVisit extends StatefulWidget {
 class _ShopVisitState extends State<ShopVisit> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  TextEditingController ShopNameController = TextEditingController();
   TextEditingController _brandDropDownController = TextEditingController();
-  TextEditingController _textField3Controller = TextEditingController();
+  TextEditingController BookerNameController = TextEditingController();
+  final shopisitViewModel = Get.put(ShopVisitViewModel());
+  int? shopvisitId;
+
 
 
   List<String> dropdownItems = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
@@ -99,7 +104,7 @@ class _ShopVisitState extends State<ShopVisit> {
     final passedOwnerName = shopData['ownerName'];
     print(passedShopName);
     print(passedOwnerName);
-
+     ShopNameController.text= passedShopName!;
 
     return Scaffold(
       appBar: AppBar(
@@ -120,7 +125,7 @@ class _ShopVisitState extends State<ShopVisit> {
                     Align(
                       alignment: Alignment.topRight,
                       child: Text(
-                        'Live Date: ${_getFormattedDate()}',
+                        'Date: ${_getFormattedDate()}',
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     ),
@@ -132,8 +137,9 @@ class _ShopVisitState extends State<ShopVisit> {
                     Container(
                       height: 30,
                       child: TextFormField(
+                        controller: ShopNameController,
                         decoration: InputDecoration(
-                          labelText: '$passedShopName',
+                          //labelText: '$passedShopName',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
@@ -150,14 +156,14 @@ class _ShopVisitState extends State<ShopVisit> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Visit Conducted By',
+                        'Booker Name',
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     ),
                     Container(
                       height: 30,
                       child: TextFormField(
-                        controller: _textField3Controller,
+                        controller: BookerNameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
@@ -297,22 +303,38 @@ class _ShopVisitState extends State<ShopVisit> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () {
-                    // Prepare the data to be passed to the next page
-                    Map<String, dynamic> dataToPass = {
-                      'shopName': passedShopName,
-                      'ownerName': passedOwnerName,
-                      'selectedBrandName': _brandDropDownController.text, // Get the selected Brandname
-                    };
+                  onPressed: () async{
+                    if (_formKey.currentState!.validate()) {
+                       shopisitViewModel.addShopVisit(ShopVisitModel(
+                          id: shopvisitId,
+                          shopName: ShopNameController.text,
+                          bookerName: BookerNameController.text,
+                          brand: _brandDropDownController.text,
+                          date: _getFormattedDate(),
+                          itemDescription: stockCheckItems[0].itemDescriptionController.text,
+                          quantity: stockCheckItems[0].qtyController.text
+                      ));
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ShopVisit_2ndPage(),
-                        settings: RouteSettings(arguments: dataToPass),
-                      ),
-                    );
-                  },
+                     //await shopisitViewModel.addShopVisit(shopVisitModels);
+
+
+                      // Prepare the data to be passed to the next page
+                      Map<String, dynamic> dataToPass = {
+                        'shopName': passedShopName,
+                        'ownerName': passedOwnerName,
+                        'selectedBrandName': _brandDropDownController.text,
+                        'bookerName': BookerNameController.text,
+
+                      };
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ShopVisit_2ndPage(),
+                          settings: RouteSettings(arguments: dataToPass),
+                        ),
+                      );
+                    } },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
                     onPrimary: Colors.white,
@@ -358,8 +380,6 @@ class _ShopVisitState extends State<ShopVisit> {
       _brandDropDownController.text = selectedBrand;
     });
   }
-
-
 }
 
 class StockCheckItem {
@@ -417,9 +437,6 @@ class StockCheckItem {
               stockCheckItem.itemDescriptionController.text = itemData;
             },
           )
-
-
-
 
         ),
         SizedBox(width: 10),

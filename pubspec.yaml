@@ -53,6 +53,8 @@ dependencies:
   flutter_typeahead: ^4.8.0
   timezone_utc_offset:
   nanoid: ^1.0.0
+  image_gallery_saver: ^2.0.0
+  image_picker: ^0.8.0+4
 dev_dependencies:
   flutter_test:
     sdk: flutter

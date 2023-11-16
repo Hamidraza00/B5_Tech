@@ -28,7 +28,7 @@ class _ShopListState extends State<ShopList> {
     final shop = _shopList[index];
 
     // Delete the shop from the database.
-    final deletedRows = await DBHelper().deleteShop(shop.id!);
+    final deletedRows = await DBHelperShopVisit().deleteShop(shop.id!);
 
     if (deletedRows > 0) {
       // If the delete operation was successful in the database, update the UI.

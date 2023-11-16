@@ -1,3 +1,5 @@
+import 'package:order_booking_shop/Databases/DBHelper.dart';
+import 'package:order_booking_shop/Databases/OrderDatabase/DBHelperOrderDetails.dart';
 import 'package:order_booking_shop/Databases/OrderDatabase/DBHelperOrderMaster.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -66,9 +68,24 @@ class DatabaseOutputs{
       co++;
       print("$co | ${i.toString()} \n");
     }
-    print("TOTAL of Products is $co");
+    print("TOTAL of Order Master is $co");
 
   }
+  // Future<void> showShopVisit() async {
+  //   print("**************Tables SHOWING****************");
+  //   print("**************Shop Visit****************");
+  //   final db = DBHelperShopVisit();
+  //
+  //   var data = await db.getShopVisitDB();
+  //   int co = 0;
+  //   for(var i in data!){
+  //     co++;
+  //     print("$co | ${i.toString()} \n");
+  //   }
+  //   print("TOTAL of Sop Visit is $co");
+  //
+  // }
+
 
   Future<void> showAllTables() async {
     print("**************Tables SHOWING****************");

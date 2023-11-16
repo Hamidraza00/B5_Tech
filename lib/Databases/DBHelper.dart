@@ -6,7 +6,7 @@ import 'dart:async';
 
 import '../Models/ShopModel.dart';
 
-class DBHelper {
+class DBHelperShopVisit {
   static Database? _db;
 
   Future<Database?> get db async {

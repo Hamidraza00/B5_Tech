@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import '../../API/ApiServices.dart';
+import '../../Models/OrderModels/OrderDetailsModel.dart';
 import '../../Models/OrderModels/OrderMasterModel.dart';
 import 'package:nanoid/nanoid.dart';
 
@@ -31,20 +32,25 @@ class DBHelperOrderMaster{
         "CREATE TABLE orderMaster (orderId INTEGER PRIMARY KEY NOT NULL, date TEXT, shopName TEXT, ownerName TEXT, phoneNo TEXT, brand TEXT, userId TEXT)");
 
 
-    // await db.execute('''
-    //   CREATE TABLE order_details(
-    //     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    //     order_master_id INTEGER,
-    //     product_name TEXT,
-    //     quantity INTEGER,
-    //     price INTEGER,
-    //     amount INTEGER,
-    //     FOREIGN KEY (order_master_id) REFERENCES order_master(orderId)
-    //   )
-    // ''');
+    await db.execute('''
+      CREATE TABLE order_details(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_master_id INTEGER,
+        productName TEXT,
+        quantity INTEGER,
+        price INTEGER,
+        amount INTEGER,
+        FOREIGN KEY (order_master_id) REFERENCES orderMaster(orderId)
+      )
+    ''');
   }
 
-
+  Future<void> addOrderDetails(List<OrderDetailsModel> orderDetailsList) async {
+    final db = await _db;
+    for (var orderDetails in orderDetailsList) {
+      await db?.insert('order_details', orderDetails.toMap());
+    }
+  }
 
   Future<List<Map<String, dynamic>>?> getOrderMasterDB() async {
     final Database db = await initDatabase();

@@ -5,7 +5,7 @@ import '../../Repositories/OrderRepository/OrderMasterRepository.dart';
 class OrderMasterViewModel extends GetxController{
 
   var allOrderMaster = <OrderMasterModel>[].obs;
-  OrderMasterRepository ordermasterRepository = OrderMasterRepository();
+  ShopVisitRepository ordermasterRepository = ShopVisitRepository();
 
   @override
   void onInit() {
@@ -15,7 +15,7 @@ class OrderMasterViewModel extends GetxController{
   }
 
   fetchAllOrderMaster() async{
-    var ordermaster = await ordermasterRepository.getOrderMaster();
+    var ordermaster = await ordermasterRepository.getShopVisit();
     allOrderMaster.value = ordermaster;
   }
 

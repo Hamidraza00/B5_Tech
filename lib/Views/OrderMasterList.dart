@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:order_booking_shop/Repositories/OrderRepository/OrderMasterRepository.dart';
-
-import '../Databases/OrderDatabase/DBHelperOrderMaster.dart';
-import '../Databases/OrderDatabase/DBHelperOrderMaster.dart';
-import '../Databases/OrderDatabase/DBHelperOrderMaster.dart';
 import '../Models/OrderModels/OrderMasterModel.dart';
 
 
@@ -33,7 +29,7 @@ class _OrderMasterListState extends State<OrderMasterList> {
     final ordermaster = _ordermasterList[index];
 
     // Delete the shop from the database.
-    final deletedRows = await OrderMasterRepository().delete(ordermaster.orderId!);
+    final deletedRows = await ShopVisitRepository().delete(ordermaster.orderId!);
 
     if (deletedRows > 0) {
       // If the delete operation was successful in the database, update the UI.

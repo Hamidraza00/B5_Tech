@@ -3,11 +3,11 @@ import 'package:order_booking_shop/Databases/OrderDatabase/DBHelperOrderMaster.d
 import 'package:order_booking_shop/Models/OrderModels/OrderMasterModel.dart';
 
 
-class OrderMasterRepository{
+class ShopVisitRepository{
 
   DBHelperOrderMaster dbHelperOrderMaster = DBHelperOrderMaster();
 
-  Future<List<OrderMasterModel>> getOrderMaster() async{
+  Future<List<OrderMasterModel>> getShopVisit() async{
     var dbClient = await dbHelperOrderMaster.db;
     List<Map> maps = await dbClient.query('orderMaster',columns: ['orderId','date','shopName','ownerName','phoneNo','brand']);
     List<OrderMasterModel> ordermaster = [];
